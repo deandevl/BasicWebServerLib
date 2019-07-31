@@ -49,4 +49,6 @@ The `args` parameter is an instance of the custom event argument `HttpRequestEve
 
   - `HttpRequestEventArgs.Body` --  contains the body of the http request
 
-The **EmployeeWebServer** console application demos the server with a [LiteDB](https://github.com/mbdavid/LiteDB) database and simple html on the client side with CRUD operations via http and web socket.
+The [**EmployeeWebServer**](https://github.com/deandevl/EmployeeWebServerApp) console application demos the server with a [LiteDB](https://github.com/mbdavid/LiteDB) database and simple html on the client side with CRUD operations via http and web socket.
+
+A `setup.exe` file is provided for installing/uninstalling the library in a folder of your choice.
