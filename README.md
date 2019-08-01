@@ -25,7 +25,7 @@ The assignment of optional callback functions for the web socket (`server.WsText
       HttpRequestEventArgs httpArgs = (HttpRequestEventArgs) args;
       _httpDetails = httpArgs.Details;
       string body = (string)httpArgs.Body;
-      _requestDictionary = _helpers.JsonToDictionary(body);
+      _requestDictionary = _serializer.Deserialize<Dictionary<string, object>>(body);
       
       if(_httpDetails.HttpPath == "employee") {
         _actions[(string)_requestDictionary["action"]]();
@@ -47,7 +47,7 @@ The `args` parameter is an instance of the custom event argument `HttpRequestEve
   }    
   ```
 
-  - `HttpRequestEventArgs.Body` --  contains the body of the http request
+  - `HttpRequestEventArgs.Body` --  contains the body of the http request.  The `body` variable is a Json string which in this **EmployeeWebServerApp**:we are using an instance of the [JavaScriptSerializer Class](https://docs.microsoft.com/en-us/dotnet/api/system.web.script.serialization.javascriptserializer?view=netframework-4.8) to deserialize to a `<Dictionary<string, object>` type.
 
 The [**EmployeeWebServer**](https://github.com/deandevl/EmployeeWebServerApp) console application demos the server with a [LiteDB](https://github.com/mbdavid/LiteDB) database and simple html on the client side with CRUD operations via http and web socket.
 

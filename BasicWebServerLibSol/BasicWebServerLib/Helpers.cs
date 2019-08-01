@@ -7,12 +7,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using BasicWebServerLib.WsCommon;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Web.Script.Serialization;
 
 namespace BasicWebServerLib {
   public class Helpers {
     private readonly Dictionary<int, string> _responseStatus;
+    private readonly JavaScriptSerializer _serializer;
 
     public Helpers() {
       _responseStatus = new Dictionary<int, string>() {
@@ -21,6 +21,7 @@ namespace BasicWebServerLib {
         {404, "HTTP/1.1 404 Not Found\r\n"},
         {500, "HTTP/1.1 500  Internal Server Error\r\n"}
       };
+      _serializer = new JavaScriptSerializer();
     }
 
     public Dictionary<string, string> MimeTypes = new Dictionary<string, string>() {
@@ -91,7 +92,7 @@ namespace BasicWebServerLib {
     }
 
     public void SendHttpJsonResponse(HttpListenerResponse response, Dictionary<string, object> responseDic) {
-      string responseStr = DictionaryToJson(responseDic);
+      string responseStr = _serializer.Serialize(responseDic);
       byte[] buffer = Encoding.UTF8.GetBytes(responseStr);
       response.ContentType = "application/json";
       response.ContentLength64 = buffer.Length;
@@ -120,25 +121,8 @@ namespace BasicWebServerLib {
     }
 
     public void SendWsText(WsFrameWriter wsFrameWriter, Dictionary<string, object> responseDict) {
-      string responseJson = DictionaryToJson(responseDict);
+      string responseJson = _serializer.Serialize(responseDict);
       wsFrameWriter.Write(WsOpCode.TextFrame,Encoding.UTF8.GetBytes(responseJson),true);
     }
-
-    public string ArrayToJson(ArrayList list) {
-      return JsonConvert.SerializeObject(list);
-    }
-    public ArrayList JArrayToArrayList(object jArray) {
-      return ((JArray)jArray).ToObject<ArrayList>();
-    }
-    
-    public string DictionaryToJson(Dictionary<string, object> dict) {
-      return JsonConvert.SerializeObject(dict);
-    }
-
-    public Dictionary<string,object> JsonToDictionary(string json_str) {
-      return JsonConvert.DeserializeObject<Dictionary<string, object>>(json_str);
-    }
-
-    
   }
 }
